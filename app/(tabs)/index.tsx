@@ -1,31 +1,48 @@
-import { StyleSheet } from 'react-native';
+import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
+import { useTheme } from "../../components/ThemeProvider";
+import { useDispatch } from "react-redux";
+import { toggleTheme } from "../../themes/actions";
+import {
+  Header,
+  HeaderLeft,
+  ProfileContainer,
+  Title,
+} from "../../themes/styles";
+import { THEMES } from "../../themes/themes";
+import { setStatusBarStyle } from "expo-status-bar";
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
+const Page = () => {
+  const { theme } = useTheme();
+  const dispatch = useDispatch();
 
-export default function TabOneScreen() {
+  const switchTheme = () => dispatch(toggleTheme());
+
+  useEffect(() => {
+    if (theme == THEMES.dark) {
+      setStatusBarStyle("light");
+    } else {
+      setStatusBarStyle("dark");
+    }
+  }, [theme]);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+    <View style={[styles.container, { backgroundColor: theme.bg }]}>
+      <Header>
+        <Title $color={theme.title}>Your account</Title>
+        <HeaderLeft>
+          <ProfileContainer></ProfileContainer>
+        </HeaderLeft>
+      </Header>
+      <Button title="Switch theme" onPress={switchTheme} />
     </View>
   );
-}
+};
+
+export default Page;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
   },
 });

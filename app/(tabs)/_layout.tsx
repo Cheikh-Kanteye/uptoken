@@ -1,55 +1,69 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable, useColorScheme } from 'react-native';
+import React from "react";
+import { Tabs } from "expo-router";
+import { useTheme } from "../../components/ThemeProvider";
+import { WIDTH, radius, spacings, tabHeight } from "../../misc/metrics";
+import { Feather } from "@expo/vector-icons";
+import Icon from "react-native-remix-icon";
 
-import Colors from '../../constants/Colors';
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const Page = () => {
+  const { theme } = useTheme();
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      }}>
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: theme.title,
+          height: tabHeight,
+          position: "absolute",
+          width: WIDTH - spacings.l * 2,
+          bottom: spacings.m,
+          left: spacings.l,
+          borderRadius: radius.xll,
+          overflow: "hidden",
+        },
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: theme.green,
+        tabBarInactiveTintColor: theme.grey,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
+          title: "HOME",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="home-4-line" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="transfer"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "TRANSFER",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="arrow-left-right-fill" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="cards"
+        options={{
+          title: "CARDS",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="bank-card-2-line" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="crypto"
+        options={{
+          title: "CRYTO",
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="grid" size={size} color={color} />
+          ),
         }}
       />
     </Tabs>
   );
-}
+};
+
+export default Page;
